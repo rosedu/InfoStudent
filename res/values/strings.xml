@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">InfoStudent</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Setari</string>
     <string name="info">Info</string>
     <string name="courses">Cursuri</string>
     <string name="calendar">Calendar</string>

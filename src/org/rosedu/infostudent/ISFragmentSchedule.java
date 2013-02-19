@@ -11,7 +11,7 @@ public class ISFragmentSchedule extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceBundle) {
 		super.onActivityCreated(savedInstanceBundle);
 		
-		mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, ISModel.getDummyListData("Orar"));
+		mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, ISModelManager.getDummyListData("Orar"));
 		setListAdapter(mAdapter);
 	}
 }
