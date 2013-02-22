@@ -3,9 +3,10 @@
 
     <string name="app_name">InfoStudent</string>
     <string name="action_settings">Setari</string>
-    <string name="info">Info</string>
-    <string name="courses">Cursuri</string>
     <string name="calendar">Calendar</string>
+    <string name="courses">Cursuri</string>
+    <string name="info">Info</string>
+    <string name="network_fail">Eroare la conectare</string>
     <string name="schedule">Orar</string>
 
 </resources>
