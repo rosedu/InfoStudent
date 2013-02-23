@@ -184,7 +184,9 @@ public class ISModelNetwork implements ISModel {
 						courseFile = null;
 					}
 
+					ftpClient.disconnect();
 					outputStream.close();
+
 					return courseFile; // might be null because of above "if"
 				} catch (Exception e) {
 					Log.println(Log.ERROR, "getCourseFile", e.toString());
