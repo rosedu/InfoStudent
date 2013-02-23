@@ -1,5 +1,8 @@
 package org.rosedu.infostudent;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -66,11 +69,13 @@ public class ISModelNetwork implements ISModel {
 		return isCourseFiles;
 	}
 
+	@Override
 	public void getCoursesAsync(Context context, ISCallback< ArrayList<ISCourseFile> > callback) {
-		listFileCoursesAsync(context, mFTPRoot, callback);
+		listCourseFilesAsync(context, mFTPRoot, callback);
 	}
 
-	public void listFileCoursesAsync(Context context, String path, final ISCallback< ArrayList<ISCourseFile> > callback) {
+	@Override
+	public void listCourseFilesAsync(Context context, String path, final ISCallback< ArrayList<ISCourseFile> > callback) {
 		if (!checkConnectivity(context)) {
 			callback.execute(null);
 			return;
@@ -105,11 +110,13 @@ public class ISModelNetwork implements ISModel {
 		}.execute(path);
 	}
 
+	@Override
 	public boolean hasParentDirectory() {
 		return (!mCurrentFTPPath.equals(mFTPRoot));
 	}
 
-	public void listParentFileCoursesAsync(Context context, final ISCallback< ArrayList<ISCourseFile> > callback) {
+	@Override
+	public void listCourseFilesFromParentAsync(Context context, final ISCallback< ArrayList<ISCourseFile> > callback) {
 		if (!hasParentDirectory()) {
 			return;
 		}
@@ -120,10 +127,11 @@ public class ISModelNetwork implements ISModel {
 		}
 
 		new AsyncTask< String, Integer, ArrayList<ISCourseFile> >() {
-			String oldFTPPath = mCurrentFTPPath;
 
 			@Override
 			protected ArrayList<ISCourseFile> doInBackground(String... params) {
+				String oldFTPPath = mCurrentFTPPath;
+
 				try {
 					FTPClient ftpClient = getFTPClient();
 					if (!ftpClient.changeWorkingDirectory(mCurrentFTPPath) || !ftpClient.changeToParentDirectory()) {
@@ -150,7 +158,45 @@ public class ISModelNetwork implements ISModel {
 		}.execute();
 	}
 
+	@Override
 	public String getCoursesPath() {
 		return mCurrentFTPPath;
+	}
+
+	@Override
+	public void getCourseFileAsync(Context context, String path, File courseFile, final ISCallback<File> callback) {
+		if (!checkConnectivity(context)) {
+			callback.execute(null);
+			return;
+		}
+
+		new AsyncTask< Object, Integer, File >() {
+
+			@Override
+			protected File doInBackground(Object... params) {
+				String path = (String)params[0];
+				File courseFile = (File)params[1];
+
+				try {
+					FTPClient ftpClient = getFTPClient();
+					BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(courseFile));
+					if (!ftpClient.retrieveFile(path, outputStream)) {
+						courseFile = null;
+					}
+
+					outputStream.close();
+					return courseFile; // might be null because of above "if"
+				} catch (Exception e) {
+					Log.println(Log.ERROR, "getCourseFile", e.toString());
+				}
+
+				return null;
+			}
+
+			@Override
+			public void onPostExecute(File courseFile) {
+				callback.execute(courseFile);
+			}
+		}.execute(path, courseFile);
 	}
 }

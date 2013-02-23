@@ -1,5 +1,7 @@
 package org.rosedu.infostudent;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -59,5 +61,15 @@ public class ISActivity extends FragmentActivity {
 		}
 
 		super.onBackPressed();
+	}
+
+	public void displayErrorDialog(int stringId) {
+		new AlertDialog.Builder(this)
+		.setTitle(getString(stringId))
+		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {}
+		})
+		.show();
 	}
 }

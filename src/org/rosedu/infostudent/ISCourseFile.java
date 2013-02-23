@@ -3,6 +3,8 @@ package org.rosedu.infostudent;
 import org.apache.commons.net.ftp.FTPFile;
 
 public class ISCourseFile {
+	private final static String mLocalCourseDir = "CourseFiles";
+
 	private String mName;
 	private String mParentPath;
 	private boolean mIsDirectory;
@@ -28,6 +30,14 @@ public class ISCourseFile {
 
 	public boolean isDirectory() {
 		return mIsDirectory;
+	}
+
+	public String getLocalRelativePath() {
+		return mLocalCourseDir + getPath();
+	}
+
+	public static String getLocalCourseDirName() {
+		return mLocalCourseDir;
 	}
 
 	public String toString() {

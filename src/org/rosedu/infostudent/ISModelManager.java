@@ -1,5 +1,6 @@
 package org.rosedu.infostudent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,8 +27,8 @@ public abstract class ISModelManager {
 		getModel().getCoursesAsync(context, callback);
 	}
 
-	public static void listFileCoursesAsync(Context context, String path, ISCallback< ArrayList<ISCourseFile> > callback) {
-		getModel().listFileCoursesAsync(context, path, callback);
+	public static void listCourseFilesAsync(Context context, String path, ISCallback< ArrayList<ISCourseFile> > callback) {
+		getModel().listCourseFilesAsync(context, path, callback);
 	}
 
 	public static boolean hasParentDirectory() {
@@ -35,7 +36,7 @@ public abstract class ISModelManager {
 	}
 
 	public static void listParentFileCoursesAsync(Context context, ISCallback< ArrayList<ISCourseFile> > callback) {
-		getModel().listParentFileCoursesAsync(context, callback);
+		getModel().listCourseFilesFromParentAsync(context, callback);
 	}
 
 	public static String getCoursesPath() {
@@ -49,5 +50,25 @@ public abstract class ISModelManager {
 		dummyList.add("a dummy list.");
 
 		return dummyList;
+	}
+
+	public static void getCourseFileAsync(Context context, ISCourseFile isCourseFile, ISCallback<File> callback) {
+		File filesDir = context.getExternalFilesDir(null);
+		if (filesDir == null) {
+			filesDir = context.getFilesDir();
+		}
+
+		File courseFile = new File(filesDir.getAbsolutePath(), isCourseFile.getLocalRelativePath());
+		if (courseFile.exists()) {
+			callback.execute(courseFile);
+			return;
+		}
+
+		if (!courseFile.getParentFile().mkdirs()) {
+			callback.execute(null);
+			return;
+		}
+
+		getModel().getCourseFileAsync(context, isCourseFile.getPath(), courseFile, callback);
 	}
 }

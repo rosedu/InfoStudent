@@ -7,6 +7,7 @@
     <string name="courses">Cursuri</string>
     <string name="info">Info</string>
     <string name="network_fail">Eroare la conectare</string>
+    <string name="file_display_fail">Eroare la afisarea fisierului</string>
     <string name="schedule">Orar</string>
 
 </resources>
